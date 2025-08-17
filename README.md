@@ -39,21 +39,4 @@ REST API support
 
 ---
 
-## 2️⃣ Hosting Your Project
-GitHub **cannot host** Java Spring Boot directly (it only hosts static HTML/CSS/JS sites).  
-👉 To show a **live demo**, you have options:
-- **Render** (free, supports Spring Boot)
-- **Railway.app** (free plan, easy deployment)
-- **Heroku** (limited free usage, needs DB setup)
-- **AWS / Azure / GCP** (cloud hosting)
 
-⚡ Best for you: **Render.com** (I can guide step by step).
-
----
-
-## 3️⃣ Share on LinkedIn
-Once hosted, write a LinkedIn post like:
-
-> 🚀 Excited to share my latest project **Prekart E-commerce** 🎉
-
-Run the project using mvn spring-boot:run
