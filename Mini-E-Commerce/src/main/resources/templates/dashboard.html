@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --info-color: #1abc9c;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .dashboard-header {
+            background-color: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e6ed;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card.primary {
+            background-color: var(--primary-color);
+        }
+
+        .card.success {
+            background-color: var(--success-color);
+        }
+
+        .card.warning {
+            background-color: var(--warning-color);
+        }
+
+        .card.dark {
+            background-color: var(--secondary-color);
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            border-top: none;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .product-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .action-btn {
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            opacity: 0.8;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard</h2>
+            <a href="/admin/add-product" class="btn btn-success action-btn">
+                <i class="fas fa-plus me-2"></i>Add Product
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card primary text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-box stat-icon"></i>
+                        <div>
+                            <div class="stat-value" th:text="${totalProducts}">0</div>
+                            <div class="stat-label">Total Products</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card success text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-tags stat-icon"></i>
+                        <div>
+                            <div class="stat-value" th:text="${totalCategories}">0</div>
+                            <div class="stat-label">Total Categories</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card warning text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-layer-group stat-icon"></i>
+                        <div>
+                            <div class="stat-value" th:text="${totalQuantity}">0</div>
+                            <div class="stat-label">Total Quantity</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card dark text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-chart-line stat-icon"></i>
+                        <div>
+                            <div class="stat-value"><span th:text="${#numbers.formatDecimal(totalValue, 1, 2)}">0.00</span></div>
+                            <div class="stat-label">Total Value</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <h4 class="mb-4"><i class="fas fa-list me-2"></i> Product Inventory</h4>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.name}">Name</td>
+                    <td><span class="badge bg-primary" th:text="${product.category}">Category</span></td>
+                    <td th:text="${product.quantity}">Qty</td>
+                    <td><span th:text="${#numbers.formatDecimal(product.price, 1, 2)}">0.00</span></td>
+                    <td>
+                        <small class="text-muted" th:text="${#strings.abbreviate(product.description, 30)}">Description</small>
+                    </td>
+                    <td><img th:src="${product.imageUrl}" class="product-img" alt="Product Image"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
