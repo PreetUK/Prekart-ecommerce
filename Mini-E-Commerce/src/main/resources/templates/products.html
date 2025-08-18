@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>PreKart | Product Catalog</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+        body {
+            background-color: #f1f3f6;
+            font-family: 'Poppins', sans-serif;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .product-card {
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease-in-out;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-image {
+            height: 200px;
+            object-fit: contain;
+            padding: 10px;
+        }
+        .btn-cart {
+            background: linear-gradient(90deg, #00b09b, #96c93d);
+            border: none;
+            color: white;
+        }
+        .btn-add {
+            background: #17a2b8;
+            border: none;
+        }
+        .btn-edit {
+            background: #007bff;
+            border: none;
+        }
+        .btn-delete {
+            background: #dc3545;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="/">PreKart</a>
+    <div class="collapse navbar-collapse">
+      <form class="d-flex ms-auto me-3" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search for products..." aria-label="Search">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+      </form>
+      <sec:authorize access="hasRole('CUSTOMER')">
+        <a href="/cart" class="btn btn-cart">🛒 Cart</a>
+      </sec:authorize>
+    </div>
+  </div>
+</nav>
+
+<!-- Category Filter -->
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <select class="form-select">
+        <option selected>All Categories</option>
+        <option>Mobiles</option>
+        <option>Electronics</option>
+        <option>Fashion</option>
+        <option>Home & Furniture</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="row g-4">
+    <div class="col-md-3" th:each="p : ${products}">
+      <div class="card product-card h-100">
+        <img th:src="${p.imageUrl}" class="card-img-top product-image" alt="Product Image">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${p.name}">Product Name</h5>
+          <p class="card-text">
+            <small class="text-muted">Category: <span th:text="${p.category}">Category</span></small><br>
+            <strong>₹<span th:text="${p.price}">0</span></strong><br>
+            Quantity: <span th:text="${p.quantity}">0</span>
+          </p>
+          <p class="text-muted" style="font-size: 0.9rem;" th:text="${p.description}">Product description</p>
+        </div>
+        <div class="card-footer bg-white border-0 d-flex flex-wrap gap-2">
+          <!-- Add to Cart: Customers only -->
+          <a th:href="@{'/cart/add/' + ${p.productId}}"
+             class="btn btn-sm btn-add text-white"
+             sec:authorize="hasRole('CUSTOMER')">Add to Cart</a>
+
+          <!-- Edit & Delete: Admin only -->
+          <a th:href="@{'/edit?productId=' + ${p.productId}}"
+             class="btn btn-sm btn-edit text-white"
+             sec:authorize="hasRole('ADMIN')">Edit</a>
+
+          <a th:href="@{'/delete?productId=' + ${p.productId}}"
+             class="btn btn-sm btn-delete text-white"
+             sec:authorize="hasRole('ADMIN')">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
